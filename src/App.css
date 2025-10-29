@@ -18,6 +18,11 @@
   --matrix-opacity: 0.3px; /* Opacidad sutil para el fondo Matrix */
 }
 
+/* Asegura que el header sea el contenedor relativo para el "5" escondido */
+.App-header {
+  position: relative;
+}
+
 /* Canvas Matrix (fondo) */
 #matrix-canvas {
   position: fixed;
@@ -244,6 +249,10 @@ body.modal-open #matrix-canvas {
   margin-bottom: 50px;
 }
 
+.phase:last-child {
+  margin-bottom: -50px; /* o 0, o un valor pequeño para separar un poco */
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;
@@ -267,6 +276,7 @@ body.modal-open #matrix-canvas {
   text-align: center;
   box-shadow: 0 0 36px rgba(57, 255, 20, 0.35);
   border: 1px solid rgba(57, 255, 20, 0.12);
+  position: relative; /* por si queremos botones absolutos dentro */
 }
 
 .modal-content button {
@@ -280,6 +290,119 @@ body.modal-open #matrix-canvas {
 
 .pong-header {
   margin-bottom: 25px;
+}
+
+/* Footer inside Pong: acomoda el botón y el texto */
+.pong-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* Close button (reemplaza la regla rota) */
+.close-button {
+  --point: 12px;
+  background-color: var(--neon);
+  border: none;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  color: black;
+  cursor: pointer;
+  transition: transform .14s, box-shadow .14s, background-color .14s;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.45), 0 0 12px rgba(33,160,160,0.12);
+  outline: none;
+  -webkit-clip-path: polygon(
+    0 50%,
+    calc(var(--point)) 0,
+    calc(100% - var(--point)) 0,
+    100% 50%,
+    calc(100% - var(--point)) 100%,
+    calc(var(--point)) 100%
+  );
+  clip-path: polygon(
+    0 50%,
+    calc(var(--point)) 0,
+    calc(100% - var(--point)) 0,
+    100% 50%,
+    calc(100% - var(--point)) 100%,
+    calc(var(--point)) 100%
+  );
+  margin-left: auto; /* empuja el botón al final del contenedor .pong-footer */
+}/* Footer inside Pong: apilar y centrar botón + texto */
+.pong-footer {
+  display: flex;
+  flex-direction: column;     /* columna: botón encima, texto debajo */
+  align-items: center;        /* centra horizontalmente */
+  justify-content: center;    /* centra verticalmente dentro del footer */
+  gap: 12px;                  /* separación entre botón y texto */
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px 0;            /* evita que el footer quede sin altura aparente */
+  box-sizing: border-box;
+}
+
+/* Asegúrate de que el botón no tenga alineaciones forzadas */
+.close-button {
+  margin: 0;                  /* limpia márgenes que empujan a la derecha */
+  padding: 10px 22px;
+  align-self: center;         /* redundante con align-items: center pero seguro */
+  float: none;                /* por si hubiera float en reglas antiguas */
+  position: static;           /* limpia position:absolute u otras reglas previas */
+  /* resto de estilos visuales del botón */
+  --point: 12px;
+  background-color: var(--neon);
+  border: none;
+  font-size: 0.95rem;
+  color: black;
+  cursor: pointer;
+  transition: transform .14s, box-shadow .14s, background-color .14s;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.45), 0 0 12px rgba(33,160,160,0.12);
+  outline: none;
+  -webkit-clip-path: polygon(
+    0 50%,
+    calc(var(--point)) 0,
+    calc(100% - var(--point)) 0,
+    100% 50%,
+    calc(100% - var(--point)) 100%,
+    calc(var(--point)) 100%
+  );
+  clip-path: polygon(
+    0 50%,
+    calc(var(--point)) 0,
+    calc(100% - var(--point)) 0,
+    100% 50%,
+    calc(100% - var(--point)) 100%,
+    calc(var(--point)) 100%
+  );
+}
+
+
+.close-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.5), 0 0 18px rgba(33,160,160,0.18);
+  background-color: var(--neon-dark);
+}
+
+/* Número camuflado (puramente decorativo) */
+.hidden-five {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--panel-bg);      /* color parecido al panel para camuflar */
+  opacity: 0.06;               /* muy tenue */
+  user-select: none;
+  pointer-events: none;        /* importante: que no capture clicks */
+  z-index: 5;
+  transform: rotate(-2deg);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 /* Responsive tweaks */

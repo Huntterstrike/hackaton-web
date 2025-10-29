@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './App.css';
+import '../App.css';
 
 const PongGame = ({ onClose }) => {
     const canvasRef = useRef(null);
@@ -200,7 +200,7 @@ const PongGame = ({ onClose }) => {
                 className="pong-canvas"
             />
             <div className="pong-footer">
-                <button onClick={onClose} className="close-button">Tancar</button>
+                <button onClick={onClose} className="inscribe-button close-button">Tancar</button>
                 <p>Envian's una captura o video a @CodeURV en Instagram!</p>
             </div>
         </div>
