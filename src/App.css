@@ -1,38 +1,291 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.pong-game-container {
+  font-family: 'Press Start 2P', monospace;
+  color: var(--neon);
 }
 
-.App-logo {
-  height: 40vmin;
+:root {
+  --bg-color: #121212;
+  --panel-bg: #070707;
+  --neon: #39FF14;
+  --neon-dark: rgba(57, 255, 20, 0.28);
+  --neon-soft: rgba(57, 255, 20, 0.12);
+  --accent: #21a0a0;
+  --vignette-opacity: 0.60;
+  --neon-glow-size: 40px;
+  --panel-border-glow: 0.18;
+  --matrix-opacity: 0.3px; /* Opacidad sutil para el fondo Matrix */
+}
+
+/* Canvas Matrix (fondo) */
+#matrix-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
   pointer-events: none;
+  display: block;
+
+  /* Opacidad baja para que sea de fondo */
+  opacity: var(--matrix-opacity);
+  filter: blur(0.6px) contrast(0.85) saturate(0.7);
+  mix-blend-mode: normal;
+  transition: opacity 0.25s linear;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Opcional: reducir aún más la opacidad cuando hay modal abierto */
+.modal-overlay-open #matrix-canvas,
+body.modal-open #matrix-canvas {
+  opacity: 0.08;
 }
 
-.App-header {
-  background-color: #282c34;
+/* Wrapper que sitúa el contenido sobre el canvas */
+.matrix-content {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
+}
+
+/* Asegura que el contenido esté por encima */
+.App > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Base */
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  position: relative;
+  background-color: transparent; /* deja ver el canvas Matrix */
+  min-height: 100vh;
+  color: var(--neon);
+  padding: 24px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Vignette sutil (oscurece bordes) */
+.App::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,var(--vignette-opacity)) 100%);
+}
+
+/* Contenedor: centra el bloque */
+.ascii-container {
+  background-color: var(--panel-bg);
+  border-radius: 12px;
+  padding: 22px;
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+  overflow-x: auto;
+  box-shadow:
+    0 0 calc(var(--neon-glow-size)) rgba(57, 255, 20, 0.40),
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    inset 0 0 80px rgba(57, 255, 20, 0.06);
+  border: 1px solid rgba(57, 255, 20, var(--panel-border-glow));
+  margin-bottom: 50px;
+}
+
+.ascii-large,
+.ascii-small {
+  display: inline-block;
+  text-align: left;
+  white-space: pre;
+  font-family: "Courier New", Courier, monospace;
+  margin: 0;
+  user-select: none;
+  line-height: 0.95;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ascii-large {
+  font-size: 0.78rem;
+  color: var(--neon);
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.25);
+}
+
+.ascii-small {
+  font-size: 0.39rem;
+  color: var(--neon);
+  margin-top: 12px;
+  text-shadow: 0 0 6px rgba(57, 255, 20, 0.18);
+}
+
+.countdown-block {
+  max-width: 1100px;
+  margin: 18px auto;
+  margin-top: 0px;
+  margin-bottom: 50px;
+  text-align: center;
+  width: 100%;
+}
+
+.countdown-title {
+  font-family: monospace;
+  font-size: 2.4rem;
+  color: var(--neon);
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.25);
+}
+
+.countdown-value {
+  font-family: monospace;
+  font-size: 2.6rem;
+  color: var(--neon);
+  margin-bottom: 16px;
+  text-shadow: 0 0 12px rgba(57, 255, 20, 0.30);
+}
+
+.event-info {
+  max-width: 1100px;
+  margin: 8px auto 30px auto;
+  color: var(--neon);
+  font-family: monospace;
+  font-size: 1.9rem;
+  text-align: center;
+  user-select: none;
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.18);
+}
+
+.event-info p {
+  margin: 6px 0;
+}
+
+.event-info .label {
+  color: #7CFC00;
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+/* Botón y fases */
+.button-wrap {
+  width: 100%;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 40px;
 }
 
-.App-link {
-  color: #61dafb;
+/* Botón: oscuro por defecto, neon on hover */
+.inscribe-button {
+  --point: 15px;
+  background-color: var(--neon); /* estado normal más oscuro */
+  border: none;
+  padding: 14px 50px;
+  font-size: 1.4rem;
+  color: black;
+  cursor: pointer;
+  transition: transform .18s, box-shadow .18s, background-color .18s;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 20px rgba(33,160,160,0.15);
+  outline: none;
+  -webkit-clip-path: polygon(
+    0 50%,
+    calc(var(--point)) 0,
+    calc(100% - var(--point)) 0,
+    100% 50%,
+    calc(100% - var(--point)) 100%,
+    calc(var(--point)) 100%
+  );
+  clip-path: polygon(
+    0 50%,
+    calc(var(--point)) 0,
+    calc(100% - var(--point)) 0,
+    100% 50%,
+    calc(100% - var(--point)) 100%,
+    calc(var(--point)) 100%
+  );
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.inscribe-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 30px rgba(33, 160, 160, 0.25);
+  background-color: var(--neon-dark); /* hover neon */
+}
+
+.inscribe-button:focus {
+  box-shadow: 0 0 0 4px rgba(57,255,20,0.12), 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.phases {
+  max-width: 1100px;
+  margin: 0 auto 80px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.phase {
+  background: var(--neon-soft);
+  padding: 22px;
+  border-radius: 16px;
+  width: min(760px, 90%);
+  box-shadow:
+    0 0 calc(var(--neon-glow-size)) rgba(57, 255, 20, 0.40),
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    inset 0 0 80px rgba(57, 255, 20, 0.06);
+  border: 1px solid rgba(57, 255, 20, var(--panel-border-glow));
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #0b0b0b;
+  padding: 24px;
+  border-radius: 12px;
+  color: var(--neon);
+  max-width: 640px;
+  text-align: center;
+  box-shadow: 0 0 36px rgba(57, 255, 20, 0.35);
+  border: 1px solid rgba(57, 255, 20, 0.12);
+}
+
+.modal-content button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.pong-header {
+  margin-bottom: 25px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .inscribe-button { padding: 12px 28px; font-size: 1.15rem; --point: 10px; }
+  .ascii-large { font-size: 8px; }
+  .ascii-small { font-size: 6px; }
+  .phases { gap: 10px; }
 }
