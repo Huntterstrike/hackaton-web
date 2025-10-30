@@ -1,0 +1,27 @@
+.phases {
+  max-width: 1100px;
+  margin: 0 auto 80px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.phase {
+  background: var(--neon-soft);
+  padding: 22px;
+  border-radius: 16px;
+  width: min(760px, 90%);
+  box-shadow:
+    0 0 calc(var(--neon-glow-size)) rgba(57, 255, 20, 0.40),
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    inset 0 0 80px rgba(57, 255, 20, 0.06);
+  border: 1px solid rgba(57, 255, 20, var(--panel-border-glow));
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.phase:last-child {
+  margin-bottom: 10px; /* menos espacio solo en la última fase */
+}

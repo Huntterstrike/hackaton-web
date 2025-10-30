@@ -1,6 +1,6 @@
 // src/components/AsciiArt.jsx
 import React from "react";
-import "../App.css";
+import "../style/AsciiArt.css";
 
 const ASCII_LARGE = `
   /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$   /$$  /$$$$$$  /$$       /$$$$$$$        /$$$$$$$  /$$$$$$

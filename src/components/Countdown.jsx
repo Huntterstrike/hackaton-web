@@ -1,6 +1,6 @@
 // src/components/Countdown.jsx
 import React from "react";
-import "../App.css";
+import "../style/Countdown.css";
 
 function formatTimeLeft(t) {
   if (!t) return "0 dies : 0 hores : 0 minuts : 0 segons";

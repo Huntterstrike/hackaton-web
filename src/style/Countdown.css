@@ -1,0 +1,24 @@
+.countdown-block {
+  max-width: 1100px;
+  margin: 18px auto;
+  margin-top: 0px;
+  margin-bottom: 50px;
+  text-align: center;
+  width: 100%;
+}
+
+.countdown-title {
+  font-family: monospace;
+  font-size: 2.4rem;
+  color: var(--neon);
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.25);
+}
+
+.countdown-value {
+  font-family: monospace;
+  font-size: 2.6rem;
+  color: var(--neon);
+  margin-bottom: 16px;
+  text-shadow: 0 0 12px rgba(57, 255, 20, 0.30);
+}

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import "../style/MatrixBackground.css";
 
 export default function MatrixBackground({ children, options = {} }) {
   const canvasRef = useRef(null);
