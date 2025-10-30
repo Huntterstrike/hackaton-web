@@ -5,7 +5,6 @@ import PongGame from "./components/PongGame";
 import AsciiArt from "./components/AsciiArt";
 import Countdown from "./components/Countdown";
 import Phases from "./components/Phases";
-import HiddenFive from "./components/HiddenFive";
 import EasterEggButton from "./components/InscribeButton";
 import MasInfo from "./components/MasInfo";
 import "./App.css";
@@ -14,7 +13,7 @@ const targetDate = new Date("2025-12-01T00:00:00");
 
 function App() {
   const [timeLeft, setTimeLeft] = useState({});
-  const [x, setX] = useState(0);
+  const [, setX] = useState(0);
   const [showPong, setShowPong] = useState(false);
 
   useEffect(() => {
@@ -53,7 +52,6 @@ function App() {
       <div className="App">
         <header className="App-header" onClick={handleClick} style={{ position: "relative" }}>
           <AsciiArt />
-          <HiddenFive />
         </header>
 
         <EasterEggButton />

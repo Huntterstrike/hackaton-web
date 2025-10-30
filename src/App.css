@@ -1,9 +1,5 @@
+/* src/style/App.css (o tu CSS global) */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-.pong-game-container {
-  font-family: 'Press Start 2P', monospace;
-  color: var(--neon);
-}
 
 :root {
   --bg-color: #121212;
@@ -15,42 +11,12 @@
   --vignette-opacity: 0.60;
   --neon-glow-size: 40px;
   --panel-border-glow: 0.18;
-  --matrix-opacity: 0.3px; /* Opacidad sutil para el fondo Matrix */
+  --matrix-opacity: 0.3px; /* conserva la variable si la usas en otros sitios */
 }
 
 /* Asegura que el header sea el contenedor relativo para el "5" escondido */
 .App-header {
   position: relative;
-}
-
-/* Canvas Matrix (fondo) */
-#matrix-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-  display: block;
-
-  /* Opacidad baja para que sea de fondo */
-  opacity: var(--matrix-opacity);
-  filter: blur(0.6px) contrast(0.85) saturate(0.7);
-  mix-blend-mode: normal;
-  transition: opacity 0.25s linear;
-}
-
-/* Opcional: reducir aún más la opacidad cuando hay modal abierto */
-.modal-overlay-open #matrix-canvas,
-body.modal-open #matrix-canvas {
-  opacity: 0.08;
-}
-
-/* Wrapper que sitúa el contenido sobre el canvas */
-.matrix-content {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
 }
 
 /* Asegura que el contenido esté por encima */
@@ -88,74 +54,6 @@ body.modal-open #matrix-canvas {
   background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,var(--vignette-opacity)) 100%);
 }
 
-/* Contenedor: centra el bloque */
-.ascii-container {
-  background-color: var(--panel-bg);
-  border-radius: 12px;
-  padding: 22px;
-  max-width: 1100px;
-  width: 100%;
-  text-align: center;
-  overflow-x: auto;
-  box-shadow:
-    0 0 calc(var(--neon-glow-size)) rgba(57, 255, 20, 0.40),
-    0 10px 30px rgba(0, 0, 0, 0.6),
-    inset 0 0 80px rgba(57, 255, 20, 0.06);
-  border: 1px solid rgba(57, 255, 20, var(--panel-border-glow));
-  margin-bottom: 50px;
-}
-
-.ascii-large,
-.ascii-small {
-  display: inline-block;
-  text-align: left;
-  white-space: pre;
-  font-family: "Courier New", Courier, monospace;
-  margin: 0;
-  user-select: none;
-  line-height: 0.95;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.ascii-large {
-  font-size: 0.78rem;
-  color: var(--neon);
-  text-shadow: 0 0 8px rgba(57, 255, 20, 0.25);
-}
-
-.ascii-small {
-  font-size: 0.39rem;
-  color: var(--neon);
-  margin-top: 12px;
-  text-shadow: 0 0 6px rgba(57, 255, 20, 0.18);
-}
-
-.countdown-block {
-  max-width: 1100px;
-  margin: 18px auto;
-  margin-top: 0px;
-  margin-bottom: 50px;
-  text-align: center;
-  width: 100%;
-}
-
-.countdown-title {
-  font-family: monospace;
-  font-size: 2.4rem;
-  color: var(--neon);
-  margin-bottom: 6px;
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.25);
-}
-
-.countdown-value {
-  font-family: monospace;
-  font-size: 2.6rem;
-  color: var(--neon);
-  margin-bottom: 16px;
-  text-shadow: 0 0 12px rgba(57, 255, 20, 0.30);
-}
-
 .event-info {
   max-width: 1100px;
   margin: 8px auto 30px auto;
@@ -175,82 +73,6 @@ body.modal-open #matrix-canvas {
   color: #7CFC00;
   margin-right: 8px;
   font-weight: 700;
-}
-
-/* Botón y fases */
-.button-wrap {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
-}
-
-/* Botón: oscuro por defecto, neon on hover */
-.inscribe-button {
-  --point: 15px;
-  background-color: var(--neon); /* estado normal más oscuro */
-  border: none;
-  padding: 14px 50px;
-  font-size: 1.4rem;
-  color: black;
-  cursor: pointer;
-  transition: transform .18s, box-shadow .18s, background-color .18s;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 20px rgba(33,160,160,0.15);
-  outline: none;
-  -webkit-clip-path: polygon(
-    0 50%,
-    calc(var(--point)) 0,
-    calc(100% - var(--point)) 0,
-    100% 50%,
-    calc(100% - var(--point)) 100%,
-    calc(var(--point)) 100%
-  );
-  clip-path: polygon(
-    0 50%,
-    calc(var(--point)) 0,
-    calc(100% - var(--point)) 0,
-    100% 50%,
-    calc(100% - var(--point)) 100%,
-    calc(var(--point)) 100%
-  );
-}
-
-.inscribe-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 30px rgba(33, 160, 160, 0.25);
-  background-color: var(--neon-dark); /* hover neon */
-}
-
-.inscribe-button:focus {
-  box-shadow: 0 0 0 4px rgba(57,255,20,0.12), 0 6px 18px rgba(0,0,0,0.4);
-}
-
-.phases {
-  max-width: 1100px;
-  margin: 0 auto 80px auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-
-.phase {
-  background: var(--neon-soft);
-  padding: 22px;
-  border-radius: 16px;
-  width: min(760px, 90%);
-  box-shadow:
-    0 0 calc(var(--neon-glow-size)) rgba(57, 255, 20, 0.40),
-    0 10px 30px rgba(0, 0, 0, 0.6),
-    inset 0 0 80px rgba(57, 255, 20, 0.06);
-  border: 1px solid rgba(57, 255, 20, var(--panel-border-glow));
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.phase:last-child {
-  margin-bottom: -50px; /* o 0, o un valor pequeño para separar un poco */
 }
 
 /* Modal */
@@ -286,123 +108,6 @@ body.modal-open #matrix-canvas {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-}
-
-.pong-header {
-  margin-bottom: 25px;
-}
-
-/* Footer inside Pong: acomoda el botón y el texto */
-.pong-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 12px;
-  width: 100%;
-}
-
-/* Close button (reemplaza la regla rota) */
-.close-button {
-  --point: 12px;
-  background-color: var(--neon);
-  border: none;
-  padding: 10px 22px;
-  font-size: 0.95rem;
-  color: black;
-  cursor: pointer;
-  transition: transform .14s, box-shadow .14s, background-color .14s;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.45), 0 0 12px rgba(33,160,160,0.12);
-  outline: none;
-  -webkit-clip-path: polygon(
-    0 50%,
-    calc(var(--point)) 0,
-    calc(100% - var(--point)) 0,
-    100% 50%,
-    calc(100% - var(--point)) 100%,
-    calc(var(--point)) 100%
-  );
-  clip-path: polygon(
-    0 50%,
-    calc(var(--point)) 0,
-    calc(100% - var(--point)) 0,
-    100% 50%,
-    calc(100% - var(--point)) 100%,
-    calc(var(--point)) 100%
-  );
-  margin-left: auto; /* empuja el botón al final del contenedor .pong-footer */
-}/* Footer inside Pong: apilar y centrar botón + texto */
-.pong-footer {
-  display: flex;
-  flex-direction: column;     /* columna: botón encima, texto debajo */
-  align-items: center;        /* centra horizontalmente */
-  justify-content: center;    /* centra verticalmente dentro del footer */
-  gap: 12px;                  /* separación entre botón y texto */
-  margin-top: 12px;
-  width: 100%;
-  padding: 14px 0;            /* evita que el footer quede sin altura aparente */
-  box-sizing: border-box;
-}
-
-/* Asegúrate de que el botón no tenga alineaciones forzadas */
-.close-button {
-  margin: 0;                  /* limpia márgenes que empujan a la derecha */
-  padding: 10px 22px;
-  align-self: center;         /* redundante con align-items: center pero seguro */
-  float: none;                /* por si hubiera float en reglas antiguas */
-  position: static;           /* limpia position:absolute u otras reglas previas */
-  /* resto de estilos visuales del botón */
-  --point: 12px;
-  background-color: var(--neon);
-  border: none;
-  font-size: 0.95rem;
-  color: black;
-  cursor: pointer;
-  transition: transform .14s, box-shadow .14s, background-color .14s;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.45), 0 0 12px rgba(33,160,160,0.12);
-  outline: none;
-  -webkit-clip-path: polygon(
-    0 50%,
-    calc(var(--point)) 0,
-    calc(100% - var(--point)) 0,
-    100% 50%,
-    calc(100% - var(--point)) 100%,
-    calc(var(--point)) 100%
-  );
-  clip-path: polygon(
-    0 50%,
-    calc(var(--point)) 0,
-    calc(100% - var(--point)) 0,
-    100% 50%,
-    calc(100% - var(--point)) 100%,
-    calc(var(--point)) 100%
-  );
-}
-
-
-.close-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.5), 0 0 18px rgba(33,160,160,0.18);
-  background-color: var(--neon-dark);
-}
-
-/* Número camuflado (puramente decorativo) */
-.hidden-five {
-  position: absolute;
-  top: 8px;
-  right: 16px;
-
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  line-height: 1;
-  color: var(--panel-bg);      /* color parecido al panel para camuflar */
-  opacity: 0.06;               /* muy tenue */
-  user-select: none;
-  pointer-events: none;        /* importante: que no capture clicks */
-  z-index: 5;
-  transform: rotate(-2deg);
-  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 /* Responsive tweaks */

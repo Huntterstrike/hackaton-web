@@ -1,6 +1,6 @@
 // src/components/EasterEggButton.jsx
 import React from "react";
-import "../App.css";
+import "../style/InscribeButton.css";
 
 export default function EasterEggButton() {
   return (
