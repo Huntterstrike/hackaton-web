@@ -16,6 +16,8 @@ export default function EasterEggButton() {
       >
         Apunta't!
       </button>
+      <p className="FechaInscripciones"> Fins al 6 de Desembre</p>
     </div>
+
   );
 }
