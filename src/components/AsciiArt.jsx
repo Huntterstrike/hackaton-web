@@ -23,7 +23,7 @@ const ASCII_SMALL = `                                     /$$   /$$  /$$$$$$   /
  \\______/ |__/  |__/ \\_______/      |__/  |__/|__/  |__/ \\______/ |__/  \\__/ \\_______/   \\___/  |__/  |__/ \\______/ |__/  |__/       \\_______/ \\_______/          \\_/    \\_______/|__/      |__/   \\___/   \\_______/   \\___/`;
 
 const eventDateDisplay = "20 i 21 de desembre de 2025";
-const eventPlace = "Crai Campus Catalunya, Tarragona";
+const eventPlace = "Sala Adjunta Campus Catalunya, Tarragona";
 
 function drawAsciiToCanvas(canvas, text, fontSpec = { fontFamily: '"Press Start 2P", monospace', fontSize: 12, lineHeight: 1.05 }) {
   if (!canvas) return;

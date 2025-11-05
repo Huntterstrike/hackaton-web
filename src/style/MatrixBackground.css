@@ -17,9 +17,6 @@
   transition: opacity 0.25s linear;
 }
 
-/* Cuando haya un modal abierto, atenuamos aún más el fondo Matrix.
-   Tu código JS/React puede añadir la clase `modal-open` a <body> o
-   `.modal-overlay-open` al contenedor raíz para activar esto. */
 .modal-overlay-open #matrix-canvas,
 body.modal-open #matrix-canvas {
   opacity: 0.08;

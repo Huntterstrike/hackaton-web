@@ -9,7 +9,7 @@ export default function EasterEggButton() {
         className="inscribe-button"
         onClick={() =>
           window.open(
-            "https://docs.google.com/forms/d/e/1FAIpQLSfDplaceholder/viewform",
+            "https://docs.google.com/forms/d/e/1FAIpQLSfoCFC4EIgZ5PpVxGnqVsxMzHs5pb971sDN4X6lPr8AvxgOJA/viewform?usp=dialog",
             "_blank"
           )
         }
