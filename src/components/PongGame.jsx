@@ -43,7 +43,7 @@ const PongGame = ({ onClose }) => {
         ctx.fillText(`${winner} WINS!`, ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
 
         ctx.font = '16px "Press Start 2P", monospace';
-        ctx.fillText('Pressiona ESC per sortir', ctx.canvas.width / 2, ctx.canvas.height / 2 + 60);
+        ctx.fillText('Tap ESC to close', ctx.canvas.width / 2, ctx.canvas.height / 2 + 60);
         return;
       }
 
@@ -84,11 +84,11 @@ const PongGame = ({ onClose }) => {
 
       // IA JUGADOR 2
       const paddle2Center = state.paddle2.y + state.paddle2.height / 2;
-      if (Math.random() < 0.95) {
+      if (Math.random() < 0.98) {
         if (paddle2Center < state.ball.y - 15 && state.paddle2.y < 400 - state.paddle2.height) {
-          state.paddle2.y += 3;
+          state.paddle2.y += 4;
         } else if (paddle2Center > state.ball.y + 15 && state.paddle2.y > 0) {
-          state.paddle2.y -= 3;
+          state.paddle2.y -= 4;
         }
       } else {
         if (paddle2Center < state.ball.y - 15 && state.paddle2.y > 0) {
@@ -188,7 +188,7 @@ const PongGame = ({ onClose }) => {
   return (
     <div className="pong-game-container">
       <div className="pong-header">
-        <h2>EASTER EGG PONG TROBAT!!</h2>
+        <h2>EASTER EGG PONG!!</h2>
       </div>
       <div className="pong-instructions">
         <p>Controls: W/S per moure't</p>

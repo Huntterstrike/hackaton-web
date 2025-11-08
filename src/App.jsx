@@ -8,8 +8,9 @@ import Phases from "./components/Phases";
 import EasterEggButton from "./components/InscribeButton";
 import MasInfo from "./components/MasInfo";
 import "./App.css";
+import Awards from "./components/Awards";
 
-const targetDate = new Date("2025-12-01T00:00:00");
+const targetDate = new Date("2025-12-20T10:00:00");
 
 function App() {
   const [timeLeft, setTimeLeft] = useState({});
@@ -59,9 +60,9 @@ function App() {
         <Countdown timeLeft={timeLeft} />
 
         <Phases />
+        <Awards />
 
         <MasInfo />
-
         {showPong && (
           <div className="modal-overlay" onClick={closePong}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>

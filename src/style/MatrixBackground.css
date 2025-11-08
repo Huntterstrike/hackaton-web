@@ -1,3 +1,6 @@
+/* src/style/MatrixBackground.css */
+
+/* Opacidad del canvas (usa la variable global si existe) */
 #matrix-canvas {
   position: fixed;
   inset: 0;
@@ -7,14 +10,33 @@
   pointer-events: none;
   display: block;
 
-  opacity: var(--matrix-opacity);
+  /* Opacidad baja para que sea de fondo */
+  opacity: var(--matrix-opacity, 0.3);
   filter: blur(0.6px) contrast(0.85) saturate(0.7);
   mix-blend-mode: normal;
   transition: opacity 0.25s linear;
 }
 
+.modal-overlay-open #matrix-canvas,
+body.modal-open #matrix-canvas {
+  opacity: 0.08;
+}
+
+/* Wrapper que sitúa el contenido sobre el canvas */
 .matrix-content {
   position: relative;
   z-index: 1;
   min-height: 100vh;
+}
+
+/* Asegura que el canvas no capture clicks y quede por detrás */
+#matrix-canvas,
+.matrix-content {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Si quieres un fallback para evitar que el canvas bloquee eventos
+   en navegadores raros, asegúrate de pointer-events: none en el canvas */
+#matrix-canvas {
+  pointer-events: none;
 }
