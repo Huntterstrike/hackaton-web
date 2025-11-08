@@ -1,4 +1,4 @@
-/* src/style/App.css (o tu CSS global) */
+/* src/style/App.css (Opción A completa) */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
@@ -11,28 +11,32 @@
   --vignette-opacity: 0.60;
   --neon-glow-size: 40px;
   --panel-border-glow: 0.18;
-  --matrix-opacity: 0.3px; /* conserva la variable si la usas en otros sitios */
+  --matrix-opacity: 0.3;
+  --footer-height: 80px;            /* ALTURA DESKTOP */
+  --footer-height-mobile: 65px;     /* ALTURA MÓVIL */
 }
 
-/* Asegura que el header sea el contenedor relativo para el "5" escondido */
-.App-header {
-  position: relative;
-}
+/* Header relativo para overlays si los hay */
+.App-header { position: relative; }
 
-/* Asegura que el contenido esté por encima */
-.App > * {
-  position: relative;
-  z-index: 2;
-}
+/* Asegura que el contenido quede por encima del canvas/fondos */
+.App > * { position: relative; z-index: 2; }
 
 /* Base */
-* {
-  box-sizing: border-box;
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--bg-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* evita scroll lateral por el footer full-bleed */
 }
 
 .App {
   position: relative;
-  background-color: transparent; /* deja ver el canvas Matrix */
+  background-color: transparent;
   min-height: 100vh;
   color: var(--neon);
   padding: 24px;
@@ -40,18 +44,68 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow-x: visible; /* el footer puede sobresalir sin ser cortado */
   z-index: 2;
 }
 
-/* Vignette sutil (oscurece bordes) */
+/* Contenido principal */
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+/* -------- Footer full‑bleed anclado al viewport (OPCIÓN A) -------- */
+.bottom-image {
+  position: relative;
+  width: 100vw;                                 /* ocupa todo el viewport */
+  margin-left: calc(50% - 50vw);                /* rompe el centrado padre */
+  margin-right: calc(50% - 50vw);
+  z-index: 2;
+  overflow: hidden;
+  background: var(--panel-bg);                  /* opcional: color de fondo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;                                   /* sin padding vertical */
+}
+
+/* Imagen que rellena el ancho; altura controlada */
+.bottom-image img {
+  display: block;
+  width: 100%;
+  height: var(--footer-height);
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Espacio antes del footer si viene tras .content */
+.content + .bottom-image { margin-top: 24px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bottom-image img {
+    height: var(--footer-height-mobile);
+  }
+}
+
+/* -------- Resto de estilos -------- */
+
 .App::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,var(--vignette-opacity)) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0,0,0,0) 40%,
+    rgba(0,0,0,var(--vignette-opacity)) 100%
+  );
 }
 
 .event-info {
@@ -65,9 +119,7 @@
   text-shadow: 0 0 8px rgba(57, 255, 20, 0.18);
 }
 
-.event-info p {
-  margin: 6px 0;
-}
+.event-info p { margin: 6px 0; }
 
 .event-info .label {
   color: #7CFC00;
@@ -78,10 +130,8 @@
 /* Modal */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
@@ -98,7 +148,7 @@
   text-align: center;
   box-shadow: 0 0 36px rgba(57, 255, 20, 0.35);
   border: 1px solid rgba(57, 255, 20, 0.12);
-  position: relative; /* por si queremos botones absolutos dentro */
+  position: relative;
 }
 
 .modal-content button {

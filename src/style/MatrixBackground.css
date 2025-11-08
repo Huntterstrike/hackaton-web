@@ -1,42 +1,78 @@
 /* src/style/MatrixBackground.css */
 
-/* Opacidad del canvas (usa la variable global si existe) */
+/* Valores por defecto (en caso de que no estén en App.css) */
+:root {
+  --bg-color: #070707;
+  --matrix-opacity: 0.3;
+}
+
+/* Aseguramos fondo oscuro consistente y altura completa */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--bg-color, #070707);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Canvas del efecto Matrix: cubre el viewport y queda por detrás */
 #matrix-canvas {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh; /* asegurar cobertura del viewport */
   z-index: 0;
   pointer-events: none;
   display: block;
 
-  /* Opacidad baja para que sea de fondo */
+  /* Opacidad / estilo del canvas */
   opacity: var(--matrix-opacity, 0.3);
   filter: blur(0.6px) contrast(0.85) saturate(0.7);
   mix-blend-mode: normal;
   transition: opacity 0.25s linear;
+  background: transparent;
 }
 
+/* Reducir opacidad del canvas cuando se abre un modal */
 .modal-overlay-open #matrix-canvas,
 body.modal-open #matrix-canvas {
   opacity: 0.08;
 }
 
-/* Wrapper que sitúa el contenido sobre el canvas */
+/* Contenedor que sitúa el contenido por encima del canvas */
 .matrix-content {
   position: relative;
   z-index: 1;
   min-height: 100vh;
+  /* permite que el contenido haga scroll si es más largo que el viewport */
 }
 
-/* Asegura que el canvas no capture clicks y quede por detrás */
+/* Asegura que el canvas y el contenido no capten toques extra */
 #matrix-canvas,
 .matrix-content {
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
-/* Si quieres un fallback para evitar que el canvas bloquee eventos
-   en navegadores raros, asegúrate de pointer-events: none en el canvas */
+/* Si por alguna razón el canvas necesita evitar capturar eventos en navegadores extraños */
 #matrix-canvas {
   pointer-events: none;
+}
+
+/* Opcional: si quieres que el canvas aumente ligeramente su tamaño en pantallas muy anchas */
+@media (min-width: 1600px) {
+  #matrix-canvas {
+    transform: scale(1.02);
+    transform-origin: center;
+  }
+}
+
+/* Opcional: smoothing de rendimiento en móviles */
+@media (max-width: 480px) {
+  #matrix-canvas {
+    will-change: transform;
+    opacity: calc(var(--matrix-opacity, 0.3) * 0.9);
+  }
 }

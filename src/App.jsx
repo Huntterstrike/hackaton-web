@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState, useEffect } from "react";
 import MatrixBackground from "./components/MatrixBackground";
 import PongGame from "./components/PongGame";
@@ -7,8 +6,8 @@ import Countdown from "./components/Countdown";
 import Phases from "./components/Phases";
 import EasterEggButton from "./components/InscribeButton";
 import MasInfo from "./components/MasInfo";
-import "./App.css";
 import Awards from "./components/Awards";
+import "./App.css";
 
 const targetDate = new Date("2025-12-20T10:00:00");
 
@@ -49,29 +48,47 @@ function App() {
   const closePong = () => setShowPong(false);
 
   return (
-    <MatrixBackground options={{ baseFontSize: 18, speed: 1.05 }}>
-      <div className="App">
-        <header className="App-header" onClick={handleClick} style={{ position: "relative" }}>
-          <AsciiArt />
-        </header>
+    <>
+      {/* Matrix envuelve SOLO header + main */}
+      <MatrixBackground options={{ baseFontSize: 18, speed: 1.05 }}>
+        <div className="App">
+          <header
+            className="App-header"
+            onClick={handleClick}
+            style={{ position: "relative" }}
+          >
+            <AsciiArt />
+          </header>
 
-        <EasterEggButton />
+          <main className="content">
+            <EasterEggButton />
+            <Countdown timeLeft={timeLeft} />
+            <Phases />
+            <Awards />
+            <MasInfo />
 
-        <Countdown timeLeft={timeLeft} />
+            {showPong && (
+              <div className="modal-overlay" onClick={closePong}>
+                <div
+                  className="modal-content"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <PongGame onClose={closePong} />
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      </MatrixBackground>
 
-        <Phases />
-        <Awards />
-
-        <MasInfo />
-        {showPong && (
-          <div className="modal-overlay" onClick={closePong}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <PongGame onClose={closePong} />
-            </div>
-          </div>
-        )}
-      </div>
-    </MatrixBackground>
+      {/* Footer fuera del Matrix: el efecto no pasa por debajo */}
+      <footer className="bottom-image">
+        <img
+          src={process.env.PUBLIC_URL + "/images/Footer.png"}
+          alt="Imagen pie de página"
+        />
+      </footer>
+    </>
   );
 }
 
