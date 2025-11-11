@@ -1,6 +1,7 @@
 // src/components/AsciiArt.jsx
 import React, { useRef, useEffect } from "react";
 import "../style/AsciiArt.css";
+import { Calendar, MapPin, Clock } from 'lucide-react';
 
 const ASCII_LARGE = `
   /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$   /$$  /$$$$$$  /$$       /$$$$$$$        /$$$$$$$  /$$$$$$
@@ -23,7 +24,8 @@ const ASCII_SMALL = `                                     /$$   /$$  /$$$$$$   /
  \\______/ |__/  |__/ \\_______/      |__/  |__/|__/  |__/ \\______/ |__/  \\__/ \\_______/   \\___/  |__/  |__/ \\______/ |__/  |__/       \\_______/ \\_______/          \\_/    \\_______/|__/      |__/   \\___/   \\_______/   \\___/`;
 
 const eventDateDisplay = "20 i 21 de desembre de 2025";
-const eventPlace = "Sala Adjunta Campus Catalunya, Tarragona";
+const eventTimeDisplay = "De 10h00 a 10h00";
+const eventPlace = "Sala de Juntes del Campus Catalunya de la URV, Tarragona";
 
 function drawAsciiToCanvas(canvas, text, fontSpec = { fontFamily: '"Press Start 2P", monospace', fontSize: 12, lineHeight: 1.05 }) {
   if (!canvas) return;
@@ -137,10 +139,13 @@ export default function AsciiArt() {
 
       <div className="event-info">
         <p>
-          <span className="label"></span> {eventDateDisplay}
+          <span className="label"><Calendar color="#39FF14"/></span> {eventDateDisplay}
         </p>
         <p>
-          <span className="label"></span> {eventPlace}
+          <span className="label"><Clock color="#39FF14"/></span> {eventTimeDisplay}
+        </p>
+        <p>
+          <span className="label"><MapPin color="#39FF14"/></span> {eventPlace}
         </p>
       </div>
     </div>

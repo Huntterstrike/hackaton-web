@@ -25,7 +25,7 @@
 }
 @media (min-width: 820px) {
   .awards-simple__row {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 48px;
   }
 }
@@ -62,7 +62,11 @@
 
 .award-tile__text {
   color: #eaffee;
-  font-size: clamp(14px, 1.6vw, 18px);
+  font-size: clamp(24px, 1.6vw, 32px);
+}
+
+.award-tile__text span {
+  font-size: 0.6em;
 }
 
 /* Acentos sutiles por puesto (solo borde/brillo, no rompe la paleta) */
