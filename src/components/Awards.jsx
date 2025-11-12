@@ -20,7 +20,7 @@ export default function Awards({
       <div className="awards-simple__row">
         {data.map((d, i) => (
           <div key={i} className={`award-tile award-tile--${d.tone}`}>
-            <div className="award-tile__place">{d.place} <span>per equip</span></div>
+            <div className="award-tile__place">{d.place}</div>
             <div className="award-tile__text">{d.text} <span>per equip</span></div>
           </div>
         ))}

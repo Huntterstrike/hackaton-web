@@ -50,7 +50,7 @@ function computeFontSizeToFit(text, targetWidthPx, {
     if (maxW <= targetWidthPx) {
       best = mid; lo = mid;
     } else {
-      hi = mid;
+      best = mid; hi = mid;
     }
   }
   return { fontSize: Math.round(best * 100) / 100, lineHeight };
