@@ -2,8 +2,8 @@
 
 /* Valores por defecto (en caso de que no estén en App.css) */
 :root {
-  --bg-color: #070707;
-  --matrix-opacity: 0.3;
+  --bg-color: #050505;
+  --matrix-opacity: 0.55;
 }
 
 /* Aseguramos fondo oscuro consistente y altura completa */
@@ -26,9 +26,9 @@ html, body, #root {
   display: block;
 
   /* Opacidad / estilo del canvas */
-  opacity: var(--matrix-opacity, 0.3);
-  filter: blur(0.6px) contrast(0.85) saturate(0.7);
-  mix-blend-mode: normal;
+  opacity: var(--matrix-opacity, 0.55 );
+  filter: blur(0.3px) contrast(1.05) saturate(1.2) brightness(1.05);
+  mix-blend-mode: screen;
   transition: opacity 0.25s linear;
   background: transparent;
 }

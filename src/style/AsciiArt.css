@@ -1,5 +1,14 @@
 /* src/style/AsciiArt.css */
 
+:root {
+  /* Ajusta estos tokens si los usas en tu tema global */
+  --panel-bg: #0b0f0b;
+  --neon: #39FF14;
+  --panel-border-glow: 0.35;
+  --neon-glow-size: 22px;
+}
+
+/* Contenedor principal del bloque ASCII + info */
 .ascii-container {
   background-color: var(--panel-bg);
   border-radius: 12px;
@@ -13,22 +22,24 @@
     0 10px 30px rgba(0, 0, 0, 0.6),
     inset 0 0 80px rgba(57, 255, 20, 0.06);
   border: 1px solid rgba(57, 255, 20, var(--panel-border-glow));
-  margin-bottom: 55px;
+  margin: 0 auto 55px auto;
 }
 
+/* Envoltorio de cada canvas */
 .ascii-canvas-wrap {
   display: block;
   width: 100%;
-  overflow: hidden;    /* ocultamos overflow lateral porque escalamos el canvas */
-  margin: 0 auto;
-  margin-bottom: 18px; /* espacio inferior para separar cada ASCII */
+  overflow: hidden;
+  margin: 0 auto 18px auto; /* espacio inferior entre ASCII */
 }
 
-/* canvas: dibujamos el ascii en él. El JS fija el tamaño CSS inline. */
+/* El canvas donde se dibuja el ASCII */
 .ascii-canvas {
   display: block;
   pointer-events: none;
-  image-rendering: pixelated;
+  /* Para la opción A: dejamos al navegador hacer el downscale suave si hiciera falta.
+     El JS ya calcula el font-size para que no necesite escalarse demasiado. */
+  image-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0 auto;
@@ -36,6 +47,7 @@
   height: auto;
 }
 
+/* Información del evento */
 .event-info {
   max-width: 1100px;
   margin: 8px auto 30px auto;
@@ -47,18 +59,52 @@
   text-shadow: 0 0 8px rgba(57, 255, 20, 0.18);
 }
 
-@media (max-width: 500px) {
-  .event-info {
-    font-size: 1.5rem!important;
-  }
-}
-
 .event-info p {
-  margin: px 0;
+  margin: 8px 0; /* corregido: antes era 'margin: px 0;' */
 }
 
 .event-info .label {
   color: #7CFC00;
   margin-right: 8px;
   font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+.event-info .label svg {
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.12em;
+}
+
+/* Ajustes responsive */
+@media (max-width: 900px) {
+  .ascii-canvas {
+    max-width: 92%;
+  }
+}
+
+@media (max-width: 600px) {
+  .ascii-canvas {
+    max-width: 100%;
+  }
+  .event-info {
+    font-size: 1.6rem;
+  }
+  .event-info .label svg {
+    width: 1.05em;
+    height: 1.05em;
+  }
+}
+
+@media (max-width: 500px) {
+  .event-info {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .event-info {
+    font-size: 1.4rem !important;
+  }
 }

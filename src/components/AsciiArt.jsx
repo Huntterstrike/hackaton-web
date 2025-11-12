@@ -1,7 +1,7 @@
 // src/components/AsciiArt.jsx
 import React, { useRef, useEffect } from "react";
 import "../style/AsciiArt.css";
-import { Calendar, MapPin, Clock } from 'lucide-react';
+import { Calendar, MapPin, Clock } from "lucide-react";
 
 const ASCII_LARGE = `
   /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$   /$$  /$$$$$$  /$$       /$$$$$$$        /$$$$$$$  /$$$$$$
@@ -12,7 +12,7 @@ const ASCII_LARGE = `
  /$$  \\ $$   | $$   | $$  \\ $$| $$  | $$| $$\\  $$$| $$  \\ $$| $$  | $$| $$  | $$| $$      | $$  | $$      | $$        | $$  
 |  $$$$$$/   | $$   | $$  | $$|  $$$$$$/| $$ \\  $$|  $$$$$$/| $$  | $$|  $$$$$$/| $$$$$$$$| $$$$$$$/      | $$       /$$$$$$
  \\______/    |__/   |__/  |__/ \\______/ |__/  \\__/ \\______/ |__/  |__/ \\______/ |________/|_______/       |__/      |______/
- `;
+`;
 
 const ASCII_SMALL = `                                     /$$   /$$  /$$$$$$   /$$$$$$  /$$   /$$             /$$     /$$                                       /$$                                               /$$   /$$                 /$$    
                                     | $$  | $$ /$$__  $$ /$$__  $$| $$  /$$/            | $$    | $$                                      | $$                                              |__/  | $$                | $$    
@@ -27,62 +27,84 @@ const eventDateDisplay = "20 i 21 de desembre de 2025";
 const eventTimeDisplay = "De 10h00 a 10h00";
 const eventPlace = "Sala de Juntes del Campus Catalunya de la URV, Tarragona";
 
-function drawAsciiToCanvas(canvas, text, fontSpec = { fontFamily: '"Press Start 2P", monospace', fontSize: 12, lineHeight: 1.05 }) {
+/* Busca el font-size máximo que cabe en targetWidthPx */
+function computeFontSizeToFit(text, targetWidthPx, {
+  fontFamily = '"Press Start 2P", monospace',
+  min = 4,
+  max = 16,
+  lineHeight = 0.98
+} = {}) {
+  const tmp = document.createElement("canvas");
+  const ctx = tmp.getContext("2d");
+  const lines = text.replace(/\t/g, "    ").split("\n");
+  let lo = min, hi = max, best = Math.min(12, max);
+
+  while (hi - lo > 0.2) {
+    const mid = (lo + hi) / 2;
+    ctx.font = `${mid}px ${fontFamily}`;
+    ctx.textBaseline = "top";
+    let maxW = 0;
+    for (const ln of lines) {
+      maxW = Math.max(maxW, ctx.measureText(ln || " ").width);
+    }
+    if (maxW <= targetWidthPx) {
+      best = mid; lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  return { fontSize: Math.round(best * 100) / 100, lineHeight };
+}
+
+/* Dibuja texto al canvas sin reescalado CSS posterior y con glow proporcional */
+function drawAsciiToCanvas(canvas, text, fontSpec) {
   if (!canvas) return;
-  const dpr = window.devicePixelRatio || 1;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  // Establecemos font y medidas sobre un canvas temporal para medir
-  const tmp = document.createElement("canvas");
-  const tctx = tmp.getContext("2d");
+  // medir
+  const t = document.createElement("canvas");
+  const tctx = t.getContext("2d");
   const font = `${fontSpec.fontSize}px ${fontSpec.fontFamily}`;
   tctx.font = font;
   tctx.textBaseline = "top";
-
   const lines = text.replace(/\t/g, "    ").split("\n");
-  // medir ancho máximo en píxeles CSS
+
   let maxWidth = 0;
   for (const ln of lines) {
-    const measure = tctx.measureText(ln || " ");
-    if (measure.width > maxWidth) maxWidth = measure.width;
+    maxWidth = Math.max(maxWidth, tctx.measureText(ln || " ").width);
   }
 
-  // dimensiones en CSS pixels
+  const lineH = Math.ceil(fontSpec.fontSize * fontSpec.lineHeight);
   const cssWidth = Math.ceil(maxWidth);
-  const lineHeightPx = Math.ceil(fontSpec.fontSize * fontSpec.lineHeight);
-  const cssHeight = Math.ceil(lines.length * lineHeightPx);
+  const cssHeight = Math.ceil(lines.length * lineH);
 
-  // Ajuste para high-DPI: tamaño real del canvas en device pixels
+  const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.max(1, Math.floor(cssWidth * dpr));
   canvas.height = Math.max(1, Math.floor(cssHeight * dpr));
-  // Mostrar con tamaño CSS correcto para permitir overflow-x: auto cuando sea más ancho
   canvas.style.width = cssWidth + "px";
   canvas.style.height = cssHeight + "px";
 
-  // Aplicar transform para dibujar en coordenadas CSS
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
-  // texto y estilo
-  const rootStyles = getComputedStyle(document.documentElement);
-  const neon = rootStyles.getPropertyValue("--neon").trim() || "#39FF14";
+  const neon = getComputedStyle(document.documentElement).getPropertyValue("--neon").trim() || "#39FF14";
   ctx.font = font;
   ctx.textBaseline = "top";
   ctx.fillStyle = neon;
 
-  // simular un ligero glow con shadow (opcional)
-  ctx.shadowColor = "rgba(57,255,20,0.16)";
-  ctx.shadowBlur = Math.max(0, Math.round(fontSpec.fontSize * 0.9));
+  // glow proporcional (más bajo en tamaños pequeños)
+  const glow = Math.max(0, Math.round(fontSpec.fontSize * 0.55));
+  ctx.shadowColor = "rgba(57,255,20,0.18)";
+  ctx.shadowBlur = glow;
 
+  // pixel snapping vertical
   let y = 0;
   for (const ln of lines) {
-    // dibujar la línea (si es vacía, dibujar un espacio para mantener dimensiones)
-    ctx.fillText(ln || " ", 0, y);
-    y += lineHeightPx;
+    ctx.fillText(ln || " ", 0, Math.round(y));
+    y += lineH;
   }
 
-  // limpiar shadow para evitar que contamine otros dibujos (por si acaso)
   ctx.shadowBlur = 0;
 }
 
@@ -91,36 +113,55 @@ export default function AsciiArt() {
   const smallRef = useRef(null);
 
   useEffect(() => {
-    // Esperar fonts si la API está disponible, para que los textos se dibujen con la font correcta
-    const doDraw = () => {
-      drawAsciiToCanvas(
-        largeRef.current,
-        ASCII_LARGE,
-        { fontFamily: '"Press Start 2P", monospace', fontSize: 12, lineHeight: 0.98 }
-      );
-      drawAsciiToCanvas(
-        smallRef.current,
-        ASCII_SMALL,
-        { fontFamily: '"Press Start 2P", monospace', fontSize: 7, lineHeight: 0.98 }
-      );
+    const drawAll = () => {
+      // contenedor principal para calcular ancho útil real
+      const container = largeRef.current?.closest(".ascii-container") || largeRef.current?.parentElement;
+
+      let targetWidth = window.innerWidth;
+      if (container) {
+        const cs = getComputedStyle(container);
+        const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        const borderX = parseFloat(cs.borderLeftWidth || 0) + parseFloat(cs.borderRightWidth || 0);
+        targetWidth = Math.max(200, container.clientWidth - padX - borderX);
+      }
+      const avail = Math.floor(targetWidth * 0.98);
+
+      const smallScreen = window.innerWidth <= 420;
+
+      const specLarge = computeFontSizeToFit(ASCII_LARGE, avail, {
+        fontFamily: '"Press Start 2P", monospace',
+        min: 4.5,
+        max: 16,
+        lineHeight: smallScreen ? 0.96 : 0.98
+      });
+      const specSmall = computeFontSizeToFit(ASCII_SMALL, avail, {
+        fontFamily: '"Press Start 2P", monospace',
+        min: 4,
+        max: 12,
+        lineHeight: smallScreen ? 0.96 : 0.98
+      });
+
+      drawAsciiToCanvas(largeRef.current, ASCII_LARGE, {
+        fontFamily: '"Press Start 2P", monospace',
+        ...specLarge
+      });
+      drawAsciiToCanvas(smallRef.current, ASCII_SMALL, {
+        fontFamily: '"Press Start 2P", monospace',
+        ...specSmall
+      });
     };
 
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(doDraw).catch(doDraw);
-    } else {
-      // Fallback si no existe la API de Font Loading
-      setTimeout(doDraw, 50);
-    }
+    const start = () => drawAll();
+    if (document.fonts?.ready) document.fonts.ready.then(start).catch(start);
+    else setTimeout(start, 50);
 
-    // Redibujar al redimensionar
     let raf = null;
     const onResize = () => {
       if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        doDraw();
-      });
+      raf = requestAnimationFrame(drawAll);
     };
     window.addEventListener("resize", onResize);
+
     return () => {
       window.removeEventListener("resize", onResize);
       if (raf) cancelAnimationFrame(raf);
@@ -139,13 +180,13 @@ export default function AsciiArt() {
 
       <div className="event-info">
         <p>
-          <span className="label"><Calendar color="#39FF14"/></span> {eventDateDisplay}
+          <span className="label"><Calendar color="#39FF14" /></span> {eventDateDisplay}
         </p>
         <p>
-          <span className="label"><Clock color="#39FF14"/></span> {eventTimeDisplay}
+          <span className="label"><Clock color="#39FF14" /></span> {eventTimeDisplay}
         </p>
         <p>
-          <span className="label"><MapPin color="#39FF14"/></span> {eventPlace}
+          <span className="label"><MapPin color="#39FF14" /></span> {eventPlace}
         </p>
       </div>
     </div>

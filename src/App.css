@@ -62,19 +62,22 @@ html, body, #root {
 /* -------- Footer full‑bleed anclado al viewport (OPCIÓN A) -------- */
 .bottom-image {
   position: relative;
-  width: 100vw;                                 /* ocupa todo el viewport */
-  margin-left: calc(50% - 50vw);                /* rompe el centrado padre */
-  margin-right: calc(50% - 50vw);
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;     /* empuja hasta bordes reales del viewport */
+  margin-right: -50vw;
+  width: 100vw;           /* ajusta exactamente al viewport */
+  background: var(--panel-bg);
   z-index: 2;
   overflow: hidden;
-  background: var(--panel-bg);                  /* opcional: color de fondo */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;                                   /* sin padding vertical */
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
 }
 
-/* Imagen que rellena el ancho; altura controlada */
+/* Imagen */
 .bottom-image img {
   display: block;
   width: 100%;
@@ -83,14 +86,8 @@ html, body, #root {
   object-position: center;
 }
 
-/* Espacio antes del footer si viene tras .content */
-.content + .bottom-image { margin-top: 24px; }
-
-/* Responsive */
 @media (max-width: 768px) {
-  .bottom-image img {
-    height: var(--footer-height-mobile);
-  }
+  .bottom-image img { height: var(--footer-height-mobile); }
 }
 
 /* -------- Resto de estilos -------- */
